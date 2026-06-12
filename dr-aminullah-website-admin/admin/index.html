@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin CMS — Dr. Aminullah</title>
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="admin-brand">Admin CMS</div>
+      <div class="admin-subtitle">Landing page satu halaman</div>
+      <nav class="admin-nav">
+        <a class="active" href="#dashboard">Dashboard</a>
+        <a href="#sections">Section</a>
+        <a href="#gallery">Galeri</a>
+        <a href="#seo">SEO</a>
+        <a href="#messages">Pesan</a>
+        <a href="../index.html">Lihat Website</a>
+      </nav>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-header" id="dashboard">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Kerangka admin untuk mengubah teks, urutan section, galeri, dan SEO landing page.</p>
+        </div>
+        <a class="btn" href="login.html">Login Page</a>
+      </header>
+
+      <section class="card-grid">
+  <div class="card">
+    <div class="card-label">Total Section</div>
+    <div class="card-value">9</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Item Galeri</div>
+    <div class="card-value">8</div>
+  </div>
+</section>
+
+      <section class="panel" id="sections">
+        <h2>Kelola Urutan Section</h2>
+        <table class="table">
+          <thead><tr><th>Urutan</th><th>Nama Section</th><th>Key</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Dr. Aminullah, S.Sos, M.AP</td>
+              <td><code>home</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Biografi</td>
+              <td><code>biography</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Riwayat Pendidikan</td>
+              <td><code>education</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Area Penelitian</td>
+              <td><code>research</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Publikasi Ilmiah</td>
+              <td><code>publications</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Prestasi & Penghargaan</td>
+              <td><code>awards</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Mata Kuliah Yang Diampu</td>
+              <td><code>teaching</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>Berita & Aktivitas Akademik</td>
+              <td><code>gallery</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>Kontak</td>
+              <td><code>contact</code></td>
+              <td><span class="badge">Aktif</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Editor Teks Section</h2>
+        <form class="form-grid" data-admin-form>
+          <div>
+            <label>Pilih Section</label>
+            <select>
+              <option value="home">1. Dr. Aminullah, S.Sos, M.AP</option><option value="biography">2. Biografi</option><option value="education">3. Riwayat Pendidikan</option><option value="research">4. Area Penelitian</option><option value="publications">5. Publikasi Ilmiah</option><option value="awards">6. Prestasi & Penghargaan</option><option value="teaching">7. Mata Kuliah Yang Diampu</option><option value="gallery">8. Berita & Aktivitas Akademik</option><option value="contact">9. Kontak</option>
+            </select>
+          </div>
+          <div>
+            <label>Status</label>
+            <select><option>Published</option><option>Draft</option><option>Hidden</option></select>
+          </div>
+          <div>
+            <label>Judul</label>
+            <input type="text" placeholder="Judul section">
+          </div>
+          <div>
+            <label>Subjudul</label>
+            <input type="text" placeholder="Subjudul section">
+          </div>
+          <div class="form-full">
+            <label>Isi Konten</label>
+            <textarea placeholder="Isi teks section"></textarea>
+          </div>
+          <div class="form-full">
+            <button class="btn" type="submit">Simpan Section</button>
+            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" id="gallery">
+        <h2>Kelola Galeri</h2>
+        <form class="form-grid" data-admin-form>
+          <div><label>Upload Gambar</label><input type="file" accept="image/*"></div>
+          <div><label>Kategori</label><input type="text" placeholder="Akademik / Publikasi / Penghargaan"></div>
+          <div><label>Judul</label><input type="text" placeholder="Judul gambar / berita"></div>
+          <div><label>Alt Text SEO</label><input type="text" placeholder="Deskripsi gambar untuk Google dan aksesibilitas"></div>
+          <div class="form-full"><label>Deskripsi</label><textarea placeholder="Deskripsi galeri"></textarea></div>
+          <div><label>SEO Title</label><input type="text" placeholder="Judul SEO khusus item"></div>
+          <div><label>SEO Description</label><input type="text" placeholder="Deskripsi SEO khusus item"></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Simpan Galeri</button>
+            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" id="seo">
+        <h2>SEO Landing Page</h2>
+        <form class="form-grid" data-admin-form>
+          <div><label>Meta Title</label><input type="text" value="Dr. Aminullah — Akademisi & Peneliti"></div>
+          <div><label>Canonical URL</label><input type="url" placeholder="https://domain-anda.com/"></div>
+          <div class="form-full"><label>Meta Description</label><textarea>Profil akademik Dr. Aminullah, S.Sos, M.AP, mencakup biografi, riwayat pendidikan, area penelitian, publikasi ilmiah, penghargaan, aktivitas akademik, dan kontak.</textarea></div>
+          <div><label>OG Image</label><input type="file" accept="image/*"></div>
+          <div><label>Robots</label><select><option>index, follow</option><option>noindex, nofollow</option></select></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Simpan SEO</button>
+            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" id="messages">
+  <div class="panel-header">
+    <div>
+      <h2>Pesan Masuk</h2>
+      <p class="panel-desc">Pesan dari form kontak landing page.</p>
+    </div>
+  </div>
+
+  <div id="messagesList" class="message-list">
+    <p class="messages-empty">Belum ada pesan terkirim</p>
+  </div>
+</section>
+    </main>
+  </div>
+  <script src="assets/admin.js"></script>
+</body>
+</html>

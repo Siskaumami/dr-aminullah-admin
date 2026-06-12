@@ -1,0 +1,98 @@
+[
+  {
+    "title": "Seminar Kebijakan Publik dan Transformasi Tata Kelola Pemerintahan",
+    "category": "Akademik",
+    "date": "2026-06-05",
+    "image": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Seminar",
+      "Kebijakan Publik",
+      "Tata Kelola"
+    ],
+    "desc": "Kegiatan seminar akademik membahas transformasi tata kelola pemerintahan, inovasi pelayanan publik, dan tantangan administrasi publik di era digital."
+  },
+  {
+    "title": "Publikasi Ilmiah Terbaru tentang Pelayanan Publik Berbasis Digital",
+    "category": "Publikasi",
+    "date": "2026-05-28",
+    "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Publikasi",
+      "Digitalisasi",
+      "Pelayanan Publik"
+    ],
+    "desc": "Artikel ilmiah terbaru membahas peningkatan kualitas pelayanan publik melalui digitalisasi sistem administrasi dan tata kelola berbasis data."
+  },
+  {
+    "title": "Program Pengabdian Masyarakat untuk Penguatan Kapasitas Desa",
+    "category": "Pengabdian",
+    "date": "2026-05-20",
+    "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Pengabdian",
+      "Desa",
+      "Pemberdayaan"
+    ],
+    "desc": "Kegiatan pengabdian masyarakat difokuskan pada peningkatan kapasitas aparatur desa, partisipasi masyarakat, dan penguatan kelembagaan lokal."
+  },
+  {
+    "title": "Riset Kolaboratif tentang Inovasi Pelayanan Publik Daerah",
+    "category": "Penelitian",
+    "date": "2026-05-12",
+    "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Riset",
+      "Inovasi",
+      "Pemerintahan Daerah"
+    ],
+    "desc": "Penelitian kolaboratif ini mengkaji strategi inovasi pelayanan publik pada pemerintah daerah serta dampaknya terhadap kepuasan masyarakat."
+  },
+  {
+    "title": "Kuliah Tamu Administrasi Publik bersama Praktisi Pemerintahan",
+    "category": "Akademik",
+    "date": "2026-04-30",
+    "image": "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Kuliah Tamu",
+      "Administrasi Publik",
+      "Praktisi"
+    ],
+    "desc": "Kuliah tamu menghadirkan praktisi pemerintahan untuk memberikan wawasan tentang praktik administrasi publik dan reformasi birokrasi."
+  },
+  {
+    "title": "Workshop Metodologi Penelitian Sosial untuk Mahasiswa Pascasarjana",
+    "category": "Penelitian",
+    "date": "2026-04-18",
+    "image": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Workshop",
+      "Metodologi",
+      "Penelitian Sosial"
+    ],
+    "desc": "Workshop ini membekali mahasiswa dengan pemahaman metodologi penelitian sosial, teknik pengumpulan data, dan strategi analisis akademik."
+  },
+  {
+    "title": "Pendampingan Tata Kelola BUMDes untuk Penguatan Ekonomi Lokal",
+    "category": "Pengabdian",
+    "date": "2026-04-07",
+    "image": "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "BUMDes",
+      "Ekonomi Lokal",
+      "Desa"
+    ],
+    "desc": "Pendampingan dilakukan untuk memperkuat tata kelola BUMDes, meningkatkan transparansi, dan mendorong pengembangan potensi ekonomi desa."
+  },
+  {
+    "title": "Artikel Opini tentang Reformasi Birokrasi dan Akuntabilitas Publik",
+    "category": "Publikasi",
+    "date": "2026-03-25",
+    "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80",
+    "keywords": [
+      "Opini",
+      "Reformasi Birokrasi",
+      "Akuntabilitas"
+    ],
+    "desc": "Tulisan opini ini membahas pentingnya reformasi birokrasi, transparansi, dan akuntabilitas dalam meningkatkan kepercayaan publik."
+  }
+]
