@@ -5,17 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Admin CMS — Dr. Aminullah</title>
-  <link rel="stylesheet" href="assets/admin.css">
+  <link rel="stylesheet" href="assets/admin.css?v=200">
+  <style>
+    .table-wrap { overflow-x: auto; margin-bottom: 24px; border: 1px solid var(--line); border-radius: 12px; }
+    .table th { background: var(--surface-soft); }
+    .table td { vertical-align: middle; }
+    .action-cell { display: flex; gap: 8px; }
+    .section-divider { border: 0; border-top: 1px dashed var(--line); margin: 32px 0 24px; }
+    .form-title { font-size: 16px; margin-bottom: 16px; color: var(--accent-dark); }
+    .status-msg { display: none; margin-left: 12px; font-weight: 600; font-size: 14px; }
+    .status-msg.success { color: #0B6FAE; }
+    .status-msg.error { color: #B42318; }
+  </style>
 </head>
 <body>
   <div class="admin-shell">
     <aside class="admin-sidebar">
       <div class="admin-brand">Admin CMS</div>
-      <div class="admin-subtitle">Landing page satu halaman</div>
+      <div class="admin-subtitle">Panel Manajemen Data</div>
       <nav class="admin-nav">
         <a class="active" href="#dashboard">Dashboard</a>
-        <a href="#sections">Section</a>
+        <a href="#sections">Urutan Section</a>
+        <a href="#biography">Biografi</a>
+        <a href="#education">Latar Belakang</a>
+        <a href="#research">Area Penelitian</a>
+        <a href="#publications">Publikasi Ilmiah</a>
+        <a href="#awards">Penghargaan</a>
+        <a href="#teaching">Pengajaran</a>
         <a href="#gallery">Galeri</a>
+        <a href="#contact">Kontak</a>
         <a href="#seo">SEO</a>
         <a href="#messages">Pesan</a>
         <a href="../index.html">Lihat Website</a>
@@ -23,167 +41,275 @@
     </aside>
 
     <main class="admin-main">
-      <header class="admin-header" id="dashboard">
+      <header class="admin-header">
         <div>
-          <h1>Dashboard</h1>
-          <p>Kerangka admin untuk mengubah teks, urutan section, galeri, dan SEO landing page.</p>
+          <h1 id="header-title">Dashboard</h1>
+          <p id="header-desc">Panel admin manajemen Landing Page.</p>
         </div>
-        <a class="btn" href="login.html">Login Page</a>
+        <a class="btn secondary" href="login.html" id="btn-logout">Logout</a>
       </header>
 
-      <section class="card-grid">
-  <div class="card">
-    <div class="card-label">Total Section</div>
-    <div class="card-value">9</div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Item Galeri</div>
-    <div class="card-value">8</div>
-  </div>
-</section>
-
-      <section class="panel" id="sections">
-        <h2>Kelola Urutan Section</h2>
-        <table class="table">
-          <thead><tr><th>Urutan</th><th>Nama Section</th><th>Key</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Dr. Aminullah, S.Sos, M.AP</td>
-              <td><code>home</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Biografi</td>
-              <td><code>biography</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Riwayat Pendidikan</td>
-              <td><code>education</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Area Penelitian</td>
-              <td><code>research</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Publikasi Ilmiah</td>
-              <td><code>publications</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Prestasi & Penghargaan</td>
-              <td><code>awards</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>Mata Kuliah Yang Diampu</td>
-              <td><code>teaching</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td>Berita & Aktivitas Akademik</td>
-              <td><code>gallery</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-            <tr>
-              <td>9</td>
-              <td>Kontak</td>
-              <td><code>contact</code></td>
-              <td><span class="badge">Aktif</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <section class="card-grid admin-view active" id="dashboard">
+        <div class="card"><div class="card-label">Status Server</div><div class="card-value" style="color:#166534">Online</div></div>
+        <div class="card"><div class="card-label">Database</div><div class="card-value" style="color:#0B6FAE">Terhubung</div></div>
       </section>
 
-      <section class="panel">
-        <h2>Editor Teks Section</h2>
-        <form class="form-grid" data-admin-form>
+      <section class="panel admin-view" id="sections">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Urutan</th><th>Nama Section</th><th>Key (ID)</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Dr. Aminullah, S.Sos, M.AP</td><td><code>home</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>2</td><td>Biografi</td><td><code>biography</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>3</td><td>Riwayat Pendidikan</td><td><code>education</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>4</td><td>Area Penelitian</td><td><code>research</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>5</td><td>Publikasi Ilmiah</td><td><code>publications</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>6</td><td>Prestasi & Penghargaan</td><td><code>awards</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>7</td><td>Mata Kuliah Yang Diampu</td><td><code>teaching</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>8</td><td>Berita & Aktivitas Akademik</td><td><code>gallery</code></td><td><span class="badge">Aktif</span></td></tr>
+              <tr><td>9</td><td>Kontak</td><td><code>contact</code></td><td><span class="badge">Aktif</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel admin-view" id="biography">
+        <form class="form-grid" id="form-bio">
+          <div class="form-full"><h3 class="form-title">Teks Latar Belakang Utama</h3></div>
+          <div class="form-full">
+            <label>Paragraf Biografi Lengkap (Gunakan Enter untuk baris baru)</label>
+            <textarea id="bio-text" placeholder="Tulis biografi..." style="min-height: 180px;" required></textarea>
+          </div>
+          <div class="form-full">
+            <button class="btn" type="submit">Simpan Teks Biografi</button>
+            <span id="msg-bio" class="status-msg"></span>
+          </div>
+        </form>
+
+        <hr class="section-divider">
+
+        <h3 class="form-title">Form Tambah Atribut Pribadi, Keahlian & Statistik</h3>
+        <form class="form-grid" id="form-profile-item">
           <div>
-            <label>Pilih Section</label>
-            <select>
-              <option value="home">1. Dr. Aminullah, S.Sos, M.AP</option><option value="biography">2. Biografi</option><option value="education">3. Riwayat Pendidikan</option><option value="research">4. Area Penelitian</option><option value="publications">5. Publikasi Ilmiah</option><option value="awards">6. Prestasi & Penghargaan</option><option value="teaching">7. Mata Kuliah Yang Diampu</option><option value="gallery">8. Berita & Aktivitas Akademik</option><option value="contact">9. Kontak</option>
+            <label>Tipe Data</label>
+            <select id="item-type" required>
+              <option value="stats">Statistik Atas (Hero Stats)</option>
+              <option value="pribadi">Data Pribadi</option>
+              <option value="keahlian">Tag Keahlian</option>
+              <option value="indeks">Indeks Akademis</option>
             </select>
           </div>
           <div>
-            <label>Status</label>
-            <select><option>Published</option><option>Draft</option><option>Hidden</option></select>
+            <label>Nama Label / Kategori</label>
+            <input type="text" id="item-label" placeholder="Contoh: NIDN / Total Sitasi / Tag" required>
           </div>
+          <div class="form-full">
+            <label>Nilai / Value</label>
+            <input type="text" id="item-value" placeholder="Contoh: 0710068502 / 35+ / Kebijakan Publik" required>
+          </div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Atribut Profil</button>
+            <span id="msg-profile-item" class="status-msg"></span>
+          </div>
+        </form>
+
+        <hr class="section-divider">
+
+        <h3 class="form-title">Daftar Data Pribadi, Keahlian & Statistik</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tipe</th>
+                <th>Label</th>
+                <th>Value</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-profile-items">
+              <tr><td colspan="4">Memuat data atribut...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel admin-view" id="education">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Tahun</th><th>Gelar & Jurusan</th><th>Institusi</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-education"><tr><td colspan="4">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Latar Belakang</h3>
+        <form class="form-grid" id="form-edu">
+          <div><label>Tahun Ajaran</label><input type="text" id="edu-year" placeholder="Contoh: 2008 - 2013" required></div>
+          <div><label>Gelar & Jurusan</label><input type="text" id="edu-degree" placeholder="Contoh: Doktor (S3)..." required></div>
+          <div class="form-full"><label>Nama Institusi / Universitas</label><input type="text" id="edu-inst" placeholder="Contoh: Universitas Brawijaya" required></div>
+          <div class="form-full"><label>Deskripsi (Judul Disertasi / Predikat)</label><textarea id="edu-desc" style="min-height: 80px;"></textarea></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Data Pendidikan</button>
+            <span id="msg-edu" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="research">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Icon</th><th>Judul Area</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-research"><tr><td colspan="3">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Area Penelitian</h3>
+        <form class="form-grid" id="form-research">
+          <div class="form-full"><label>Icon (Emoji / Teks)</label><input type="text" id="res-icon" placeholder="Contoh: 🏛️" required></div>
+          <div class="form-full"><label>Judul Area Penelitian</label><input type="text" id="res-title" placeholder="Contoh: Tata Kelola Pemerintahan" required></div>
+          <div class="form-full"><label>Deskripsi Kontainer</label><textarea id="res-desc" style="min-height: 80px;" required></textarea></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Area Penelitian</button>
+            <span id="msg-res" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="publications">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Tahun</th><th>Tipe Jurnal</th><th>Judul Publikasi</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-publications"><tr><td colspan="4">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Publikasi Ilmiah</h3>
+        <form class="form-grid" id="form-pub">
+          <div><label>Tahun Publikasi</label><input type="text" id="pub-year" placeholder="Contoh: 2026" required></div>
+          <div><label>Tipe Jurnal</label><select id="pub-type"><option value="Jurnal Nasional">Jurnal Nasional</option><option value="Jurnal Internasional">Jurnal Internasional</option><option value="Pengabdian Masyarakat">Pengabdian Masyarakat</option><option value="Artikel Lainnya">Artikel Lainnya</option></select></div>
+          <div class="form-full"><label>Judul Publikasi</label><input type="text" id="pub-title" placeholder="Tuliskan judul lengkap..." required></div>
+          <div><label>Penulis</label><input type="text" id="pub-authors" placeholder="Contoh: Aminullah, dkk." required></div>
+          <div><label>Nama Jurnal / Penerbit</label><input type="text" id="pub-journal" placeholder="Contoh: Nuras Jurnal..." required></div>
+          <div class="form-full"><label>URL / Link Jurnal Asli</label><input type="url" id="pub-url" placeholder="https://doi.org/..."></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Publikasi</button>
+            <span id="msg-pub" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="awards">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Tahun</th><th>Penghargaan</th><th>Institusi</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-awards"><tr><td colspan="4">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Penghargaan</h3>
+        <form class="form-grid" id="form-award">
+          <div><label>Tahun</label><input type="text" id="aw-year" placeholder="Contoh: 2023" required></div>
+          <div><label>Icon (Emoji)</label><input type="text" id="aw-icon" placeholder="Contoh: 🏆" required></div>
+          <div class="form-full"><label>Nama Penghargaan</label><input type="text" id="aw-title" placeholder="Contoh: Dosen Berprestasi" required></div>
+          <div class="form-full"><label>Institusi Tempat Memperoleh</label><input type="text" id="aw-org" placeholder="Contoh: Universitas Yudharta" required></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Penghargaan</button>
+            <span id="msg-aw" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="teaching">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Kode</th><th>Mata Kuliah</th><th>Level</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-teaching"><tr><td colspan="4">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Pengajaran</h3>
+        <form class="form-grid" id="form-teach">
+          <div class="form-full"><label>Kode Mata Kuliah</label><input type="text" id="tch-code" placeholder="Contoh: ANP301" required></div>
+          <div class="form-full"><label>Nama Mata Kuliah</label><input type="text" id="tch-name" placeholder="Contoh: Teori Administrasi Publik" required></div>
+          <div class="form-full"><label>Semester / Level</label><input type="text" id="tch-level" placeholder="Contoh: S1 - Semester Ganjil" required></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Pengajaran</button>
+            <span id="msg-tch" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="gallery">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Kategori</th><th>Judul Galeri</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-gallery"><tr><td colspan="4">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Item Galeri</h3>
+        <form class="form-grid" id="form-gal">
+          <div><label>URL Gambar (Link Web)</label><input type="url" id="gal-img" placeholder="https://..." required></div>
+          <div><label>Kategori</label><select id="gal-cat"><option value="Akademik">Akademik</option><option value="Penelitian">Penelitian</option><option value="Pengabdian">Pengabdian</option><option value="Publikasi">Publikasi</option></select></div>
+          <div class="form-full"><label>Judul Berita</label><input type="text" id="gal-title" placeholder="Contoh: Seminar Kebijakan Publik..." required></div>
+          <div><label>Tanggal Rilis (YYYY-MM-DD)</label><input type="date" id="gal-date" required></div>
+          <div><label>Keyword (Pisahkan dengan koma)</label><input type="text" id="gal-keys" placeholder="Contoh: Seminar, Tata Kelola" required></div>
+          <div class="form-full"><label>Deskripsi Berita</label><textarea id="gal-desc" required></textarea></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Galeri</button>
+            <span id="msg-gal" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="contact">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Nama Label</th><th>Teks Tampilan</th><th>Aksi</th></tr></thead>
+            <tbody id="tbody-contacts"><tr><td colspan="3">Memuat data...</td></tr></tbody>
+          </table>
+        </div>
+        <hr class="section-divider">
+        <h3 class="form-title">Form Tambah Kontak</h3>
+        <form class="form-grid" id="form-contact">
+          <div><label>Icon (Emoji)</label><input type="text" id="con-icon" placeholder="Contoh: ✉️" required></div>
+          <div><label>Nama Label</label><input type="text" id="con-label" placeholder="Contoh: Email Akademis" required></div>
+          <div><label>Teks Tampilan</label><input type="text" id="con-text" placeholder="Contoh: aminullah@yudharta.ac.id" required></div>
+          <div><label>URL Tujuan / Link</label><input type="text" id="con-link" placeholder="Contoh: mailto:aminullah@yudharta.ac.id" required></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Tambah Kontak</button>
+            <span id="msg-con" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="seo">
+        <form class="form-grid" id="form-seo">
+          <div><label>Meta Title</label><input type="text" id="seo-title" required></div>
+          <div><label>Canonical URL</label><input type="url" id="seo-url" required></div>
+          <div class="form-full"><label>Meta Description</label><textarea id="seo-desc" style="min-height: 80px;" required></textarea></div>
+          <div class="form-full">
+            <button class="btn" type="submit">Simpan Pengaturan SEO</button>
+            <span id="msg-seo" class="status-msg"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel admin-view" id="messages">
+        <div class="panel-header">
           <div>
-            <label>Judul</label>
-            <input type="text" placeholder="Judul section">
+            <p class="panel-desc">Seluruh pesan yang dikirim pengunjung melalui form akan masuk ke tabel ini.</p>
           </div>
-          <div>
-            <label>Subjudul</label>
-            <input type="text" placeholder="Subjudul section">
-          </div>
-          <div class="form-full">
-            <label>Isi Konten</label>
-            <textarea placeholder="Isi teks section"></textarea>
-          </div>
-          <div class="form-full">
-            <button class="btn" type="submit">Simpan Section</button>
-            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
-          </div>
-        </form>
+        </div>
+        <div id="messagesList" class="message-list">
+          <p class="messages-empty">Belum ada pesan terkirim</p>
+        </div>
       </section>
 
-      <section class="panel" id="gallery">
-        <h2>Kelola Galeri</h2>
-        <form class="form-grid" data-admin-form>
-          <div><label>Upload Gambar</label><input type="file" accept="image/*"></div>
-          <div><label>Kategori</label><input type="text" placeholder="Akademik / Publikasi / Penghargaan"></div>
-          <div><label>Judul</label><input type="text" placeholder="Judul gambar / berita"></div>
-          <div><label>Alt Text SEO</label><input type="text" placeholder="Deskripsi gambar untuk Google dan aksesibilitas"></div>
-          <div class="form-full"><label>Deskripsi</label><textarea placeholder="Deskripsi galeri"></textarea></div>
-          <div><label>SEO Title</label><input type="text" placeholder="Judul SEO khusus item"></div>
-          <div><label>SEO Description</label><input type="text" placeholder="Deskripsi SEO khusus item"></div>
-          <div class="form-full">
-            <button class="btn" type="submit">Simpan Galeri</button>
-            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
-          </div>
-        </form>
-      </section>
-
-      <section class="panel" id="seo">
-        <h2>SEO Landing Page</h2>
-        <form class="form-grid" data-admin-form>
-          <div><label>Meta Title</label><input type="text" value="Dr. Aminullah — Akademisi & Peneliti"></div>
-          <div><label>Canonical URL</label><input type="url" placeholder="https://domain-anda.com/"></div>
-          <div class="form-full"><label>Meta Description</label><textarea>Profil akademik Dr. Aminullah, S.Sos, M.AP, mencakup biografi, riwayat pendidikan, area penelitian, publikasi ilmiah, penghargaan, aktivitas akademik, dan kontak.</textarea></div>
-          <div><label>OG Image</label><input type="file" accept="image/*"></div>
-          <div><label>Robots</label><select><option>index, follow</option><option>noindex, nofollow</option></select></div>
-          <div class="form-full">
-            <button class="btn" type="submit">Simpan SEO</button>
-            <span data-form-message style="display:none;margin-left:12px;color:#0B6FAE;"></span>
-          </div>
-        </form>
-      </section>
-
-      <section class="panel" id="messages">
-  <div class="panel-header">
-    <div>
-      <h2>Pesan Masuk</h2>
-      <p class="panel-desc">Pesan dari form kontak landing page.</p>
-    </div>
-  </div>
-
-  <div id="messagesList" class="message-list">
-    <p class="messages-empty">Belum ada pesan terkirim</p>
-  </div>
-</section>
     </main>
   </div>
-  <script src="assets/admin.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-config.js"></script>
+  <script src="assets/admin.js?v=200"></script>
 </body>
 </html>

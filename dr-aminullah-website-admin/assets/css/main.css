@@ -584,10 +584,20 @@ section {
   line-height: 1.6;
 }
 
+/* --- AREA PENELITIAN GRID --- */
 .research-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+}
+
+/* Modifikasi: Jika kontainer penelitian sisa 1 (ke-4, ke-7, dst), bentangkan seluas 3 kolom (Desktop) */
+.research-card:last-child:nth-child(3n - 2) {
+  grid-column: span 3;
+}
+/* Modifikasi: Jika kontainer penelitian sisa 2 (ke-5, ke-8, dst), kontainer terakhir bentangkan seluas 2 kolom (Desktop) */
+.research-card:last-child:nth-child(3n - 1) {
+  grid-column: span 2;
 }
 
 .research-card {
@@ -768,10 +778,16 @@ section {
   opacity: 0.8;
 }
 
+/* --- PENGHARGAAN GRID --- */
 .awards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
+}
+
+/* Modifikasi: Jika kontainer ganjil (sisa 1), bentangkan seluas 2 kolom (Desktop & Tab) */
+.award-card:last-child:nth-child(odd) {
+  grid-column: span 2;
 }
 
 .award-card {
@@ -824,10 +840,16 @@ section {
   margin-bottom: 2rem;
 }
 
+/* --- PENGAJARAN GRID --- */
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.25rem;
+}
+
+/* Modifikasi: Jika kontainer ganjil (sisa 1), bentangkan seluas 2 kolom (Desktop & Tab) */
+.course-item:last-child:nth-child(odd) {
+  grid-column: span 2;
 }
 
 .course-item {
@@ -1293,6 +1315,26 @@ footer {
   margin-bottom: 0;
 }
 
+/* --- MODIFIKASI: TAMPILAN TAB/TABLET --- */
+@media (max-width: 992px) {
+  /* Area Penelitian menjadi 2 Kolom pada Tablet */
+  .research-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Reset perilaku bentangan desktop 3 kolom */
+  .research-card:last-child:nth-child(3n - 2),
+  .research-card:last-child:nth-child(3n - 1) {
+    grid-column: auto;
+  }
+  
+  /* Aktifkan perilaku ganjil membentang 2 kolom untuk Tab */
+  .research-card:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+}
+
+/* --- TAMPILAN MOBILE --- */
 @media (max-width: 768px) {
   nav {
     height: 60px;
@@ -1374,6 +1416,7 @@ footer {
     margin: 0 auto;
   }
 
+  /* Ubah semua menjadi 1 Kolom di Mobile */
   .bio-grid,
   .research-grid,
   .awards-grid,
@@ -1381,6 +1424,13 @@ footer {
   .contact-grid,
   .news-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Modifikasi: Kembalikan bentangan seluruh kartu ke 1 kolom agar pas di mobile */
+  .research-card:last-child:nth-child(n),
+  .award-card:last-child:nth-child(n),
+  .course-item:last-child:nth-child(n) {
+    grid-column: span 1;
   }
 
   .teaching-section {

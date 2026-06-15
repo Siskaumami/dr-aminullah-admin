@@ -1,436 +1,390 @@
-  (function () {
-    function runAfterPageLoaded(callback) {
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", callback);
-      } else {
-        callback();
-      }
+(function () {
+  function runAfterPageLoaded(callback) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", callback);
+    } else {
+      callback();
+    }
+  }
+
+  // LOGIKA DIPERBAIKI: Menggunakan &lt; dan &gt; agar karakter teks tidak hilang
+  function escapeHtml(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  let globalNewsItems = [];
+  let activeNewsCategory = "all";
+  let showAllNews = false;
+
+  // ==============================================================
+  // KONEKSI & PENARIKAN DATA DINAMIS DARI DATABASE SUPABASE (READ)
+  // ==============================================================
+  async function loadPublicDataFromDatabase() {
+    console.log("Mencoba sinkronisasi data dari Supabase...");
+    const supa = window.supabaseClient;
+    if (!supa) {
+      console.warn("Koneksi Supabase tidak ditemukan.");
+      return;
     }
 
-    /* FILTER PUBLIKASI ILMIAH */
-    window.filterPubs = function (type, btn) {
-      document.querySelectorAll(".filter-btn").forEach(function (button) {
-        button.classList.remove("active");
-      });
-
-      if (btn) {
-        btn.classList.add("active");
+    try {
+      const { data: seo } = await supa.from('seo_settings').select('*').eq('page_key', 'home').maybeSingle();
+      if (seo) {
+        if (seo.meta_title) document.title = seo.meta_title;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && seo.meta_description) metaDesc.setAttribute('content', seo.meta_description);
       }
 
-      document.querySelectorAll(".pub-item").forEach(function (item) {
-        item.style.display =
-          type === "all" || item.dataset.type === type ? "grid" : "none";
-      });
-    };
+      const { data: bio } = await supa.from('biography').select('*').eq('id', 1).maybeSingle();
+      if (bio && bio.content_text) {
+        const bioContainer = document.querySelector('.bio-content');
+        if (bioContainer) {
+          const paragraphs = bio.content_text.split(/\n\s*\n/);
+          bioContainer.innerHTML = paragraphs.map(p => {
+            if (p.trim().startsWith('"') || p.trim().startsWith('“')) {
+              return `<div class="bio-quote"><blockquote>${escapeHtml(p)}</blockquote></div>`;
+            }
+            return `<p>${escapeHtml(p)}</p>`;
+          }).join('');
+        }
+      }
 
-    /* FORM KONTAK */
-const CONTACT_MESSAGES_KEY = "drAminullahContactMessages";
+      const { data: edu } = await supa.from('education').select('*').order('id', { ascending: true });
+      if (edu && edu.length > 0) {
+        const eduContainer = document.querySelector('.timeline');
+        if (eduContainer) {
+          eduContainer.innerHTML = edu.map(item => `
+            <div class="timeline-item">
+              <div class="timeline-year">${escapeHtml(item.year_range)}</div>
+              <div class="timeline-degree">${escapeHtml(item.degree)}</div>
+              <div class="timeline-institution">${escapeHtml(item.institution)}</div>
+              <div class="timeline-desc">${escapeHtml(item.description)}</div>
+            </div>
+          `).join('');
+        }
+      }
 
-function getContactMessages() {
-  try {
-    return JSON.parse(localStorage.getItem(CONTACT_MESSAGES_KEY)) || [];
-  } catch (error) {
-    return [];
+      const { data: res } = await supa.from('research_areas').select('*').order('id', { ascending: true });
+      if (res && res.length > 0) {
+        const resContainer = document.querySelector('.research-grid');
+        if (resContainer) {
+          resContainer.innerHTML = res.map(item => `
+            <div class="research-card visible">
+              <div class="research-icon">${escapeHtml(item.icon)}</div>
+              <div class="research-card-title">${escapeHtml(item.title)}</div>
+              <div class="research-card-desc">${escapeHtml(item.description)}</div>
+            </div>
+          `).join('');
+        }
+      }
+
+      const { data: pub } = await supa.from('publications').select('*').order('year_pub', { ascending: false });
+      if (pub && pub.length > 0) {
+        console.log(`Berhasil memuat ${pub.length} Publikasi dari Supabase.`);
+        const pubContainer = document.getElementById('pubList');
+        if (pubContainer) {
+          pubContainer.innerHTML = pub.map(item => {
+            let badgeClass = item.pub_type.includes('Internasional') ? 'badge-journal' : 
+                             item.pub_type.includes('Pengabdian') ? 'badge-conference' : 'badge-journal';
+            
+            let catType = item.pub_type.includes('Internasional') || item.pub_type.includes('Nasional') ? 'journal' : 
+                          item.pub_type.includes('Pengabdian') ? 'conference' : 'book';
+            
+            return `
+            <div class="pub-item" data-type="${catType}" style="display:grid;">
+              <div class="pub-year">${escapeHtml(item.year_pub)}</div>
+              <div>
+                <span class="pub-type-badge ${badgeClass}">${escapeHtml(item.pub_type)}</span>
+                <a href="${escapeHtml(item.url_link)}" target="_blank" class="pub-title" style="text-decoration:none; display:block;">${escapeHtml(item.title)}</a>
+                <div class="pub-authors">${escapeHtml(item.authors)}</div>
+                <div class="pub-journal">${escapeHtml(item.journal_name)}</div>
+              </div>
+            </div>`;
+          }).join('');
+        }
+      }
+
+      const { data: awd } = await supa.from('awards').select('*').order('id', { ascending: true });
+      if (awd && awd.length > 0) {
+        const awdContainer = document.querySelector('.awards-grid');
+        if (awdContainer) {
+          awdContainer.innerHTML = awd.map(item => `
+            <div class="award-card visible">
+              <div class="award-icon">${escapeHtml(item.icon)}</div>
+              <div>
+                <div class="award-year">${escapeHtml(item.year_awd)}</div>
+                <div class="award-title">${escapeHtml(item.title)}</div>
+                <div class="award-org">${escapeHtml(item.organization)}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      const { data: tch } = await supa.from('teaching').select('*').order('id', { ascending: true });
+      if (tch && tch.length > 0) {
+        const tchContainer = document.querySelector('.courses-grid');
+        if (tchContainer) {
+          tchContainer.innerHTML = tch.map(item => `
+            <div class="course-item">
+              <div class="course-code">${escapeHtml(item.course_code)}</div>
+              <div>
+                <div class="course-name">${escapeHtml(item.course_name)}</div>
+                <div class="course-level">${escapeHtml(item.level_semester)}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      const { data: gal } = await supa.from('gallery').select('*').order('date_pub', { ascending: false });
+      if (gal && gal.length > 0) {
+        globalNewsItems = gal; 
+        renderNews();
+      }
+
+      const { data: con } = await supa.from('contacts').select('*').order('id', { ascending: true });
+      if (con && con.length > 0) {
+        const conContainer = document.querySelector('.contact-items');
+        if (conContainer) {
+          conContainer.innerHTML = con.map(item => `
+            <div class="contact-item">
+              <div class="contact-item-icon">${escapeHtml(item.icon)}</div>
+              <div>
+                <div class="contact-item-label">${escapeHtml(item.label_name)}</div>
+                <div class="contact-item-value">
+                  <a href="${escapeHtml(item.link_url)}" target="_blank" style="color:inherit; text-decoration:none;">${escapeHtml(item.display_text)}</a>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+      
+      console.log("Sinkronisasi Selesai! Halaman depan 100% menggunakan data Supabase.");
+
+    } catch (err) {
+      console.error("Kesalahan kritis saat sinkronisasi data Supabase:", err);
+    }
   }
-}
 
-function saveContactMessage(message) {
-  const messages = getContactMessages();
-  messages.unshift(message);
-  localStorage.setItem(CONTACT_MESSAGES_KEY, JSON.stringify(messages));
-}
+  // ==============================================================
+  // LOGIKA ANTARMUKA
+  // ==============================================================
 
-function setContactFormMessage(element, text, type) {
-  if (!element) return;
+  window.filterPubs = function (type, btn) {
+    document.querySelectorAll(".filter-btn").forEach(function (button) {
+      button.classList.remove("active");
+    });
+    if (btn) btn.classList.add("active");
 
-  element.textContent = text;
-  element.style.display = "block";
-  element.style.color = type === "error" ? "#B42318" : "#7a5c20";
-}
-
-function hideContactFormMessage(element) {
-  if (!element) return;
-  element.style.display = "none";
-  element.textContent = "";
-}
-
-window.handleSubmit = function (event) {
-  event.preventDefault();
-
-  const form = event.target;
-  const formMessage = document.getElementById("formMsg");
-
-  const formData = {
-    id: `msg-${Date.now()}`,
-    name: form.elements.name?.value.trim() || "",
-    email: form.elements.email?.value.trim() || "",
-    whatsapp: form.elements.whatsapp?.value.trim() || "",
-    institution: form.elements.institution?.value.trim() || "",
-    subject: form.elements.subject?.value.trim() || "",
-    message: form.elements.message?.value.trim() || "",
-    status: "unread",
-    createdAt: new Date().toISOString()
+    document.querySelectorAll(".pub-item").forEach(function (item) {
+      item.style.display = (type === "all" || item.dataset.type === type) ? "grid" : "none";
+    });
   };
 
-  const hasEmptyField = Object.entries(formData)
-    .filter(([key]) => !["id", "status", "createdAt"].includes(key))
-    .some(([, value]) => value === "");
+  window.handleSubmit = function (event) {
+    event.preventDefault();
+    const form = event.target;
+    const formMessage = document.getElementById("formMsg");
 
-  if (hasEmptyField) {
-    setContactFormMessage(formMessage, "Mohon lengkapi data Anda", "error");
-    return;
+    if (!form.elements.name?.value.trim() || !form.elements.message?.value.trim()) {
+      formMessage.textContent = "Mohon lengkapi nama dan isi pesan Anda.";
+      formMessage.style.display = "block";
+      formMessage.style.color = "#B42318";
+      return;
+    }
+
+    formMessage.textContent = "✓ Pesan Anda telah disimulasikan terkirim. Terima kasih!";
+    formMessage.style.display = "block";
+    formMessage.style.color = "#7a5c20";
+    form.reset();
+    setTimeout(function () { formMessage.style.display = "none"; }, 4000);
+  };
+
+  const newsGrid = document.getElementById("newsGrid");
+  const newsMoreBtn = document.getElementById("newsMoreBtn");
+  const newsModal = document.getElementById("newsModal");
+  const newsModalClose = document.getElementById("newsModalClose");
+
+  function getNewsLimit() {
+    if (window.innerWidth <= 520) return 3;
+    if (window.innerWidth <= 900) return 4;
+    return 6;
   }
 
-  saveContactMessage(formData);
-  setContactFormMessage(formMessage, "✓ Pesan Anda telah dikirim. Terima kasih!", "success");
+  function formatNewsDate(dateString) {
+    if (!dateString) return "-";
+    return new Date(dateString).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+  }
 
-  form.reset();
-
-  setTimeout(function () {
-    hideContactFormMessage(formMessage);
-  }, 4000);
-};
-
-    runAfterPageLoaded(function () {
-      /* ANIMASI SAAT SCROLL */
-      const fadeElements = document.querySelectorAll(".fade-in");
-
-      if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-
-        fadeElements.forEach(function (element) {
-          observer.observe(element);
-        });
-      } else {
-        fadeElements.forEach(function (element) {
-          element.classList.add("visible");
-        });
-      }
-
-      /* DATA BERITA UNTUK SECTION GALLERY */
-      const newsItems = [
-        {
-          title: "Seminar Kebijakan Publik dan Transformasi Tata Kelola Pemerintahan",
-          category: "Akademik",
-          date: "2026-06-05",
-          image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Seminar", "Kebijakan Publik", "Tata Kelola"],
-          desc: "Kegiatan seminar akademik membahas transformasi tata kelola pemerintahan, inovasi pelayanan publik, dan tantangan administrasi publik di era digital."
-        },
-        {
-          title: "Publikasi Ilmiah Terbaru tentang Pelayanan Publik Berbasis Digital",
-          category: "Publikasi",
-          date: "2026-05-28",
-          image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Publikasi", "Digitalisasi", "Pelayanan Publik"],
-          desc: "Artikel ilmiah terbaru membahas peningkatan kualitas pelayanan publik melalui digitalisasi sistem administrasi dan tata kelola berbasis data."
-        },
-        {
-          title: "Program Pengabdian Masyarakat untuk Penguatan Kapasitas Desa",
-          category: "Pengabdian",
-          date: "2026-05-20",
-          image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Pengabdian", "Desa", "Pemberdayaan"],
-          desc: "Kegiatan pengabdian masyarakat difokuskan pada peningkatan kapasitas aparatur desa, partisipasi masyarakat, dan penguatan kelembagaan lokal."
-        },
-        {
-          title: "Riset Kolaboratif tentang Inovasi Pelayanan Publik Daerah",
-          category: "Penelitian",
-          date: "2026-05-12",
-          image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Riset", "Inovasi", "Pemerintahan Daerah"],
-          desc: "Penelitian kolaboratif ini mengkaji strategi inovasi pelayanan publik pada pemerintah daerah serta dampaknya terhadap kepuasan masyarakat."
-        },
-        {
-          title: "Kuliah Tamu Administrasi Publik bersama Praktisi Pemerintahan",
-          category: "Akademik",
-          date: "2026-04-30",
-          image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Kuliah Tamu", "Administrasi Publik", "Praktisi"],
-          desc: "Kuliah tamu menghadirkan praktisi pemerintahan untuk memberikan wawasan tentang praktik administrasi publik dan reformasi birokrasi."
-        },
-        {
-          title: "Workshop Metodologi Penelitian Sosial untuk Mahasiswa Pascasarjana",
-          category: "Penelitian",
-          date: "2026-04-18",
-          image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Workshop", "Metodologi", "Penelitian Sosial"],
-          desc: "Workshop ini membekali mahasiswa dengan pemahaman metodologi penelitian sosial, teknik pengumpulan data, dan strategi analisis akademik."
-        },
-        {
-          title: "Pendampingan Tata Kelola BUMDes untuk Penguatan Ekonomi Lokal",
-          category: "Pengabdian",
-          date: "2026-04-07",
-          image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=900&q=80",
-          keywords: ["BUMDes", "Ekonomi Lokal", "Desa"],
-          desc: "Pendampingan dilakukan untuk memperkuat tata kelola BUMDes, meningkatkan transparansi, dan mendorong pengembangan potensi ekonomi desa."
-        },
-        {
-          title: "Artikel Opini tentang Reformasi Birokrasi dan Akuntabilitas Publik",
-          category: "Publikasi",
-          date: "2026-03-25",
-          image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80",
-          keywords: ["Opini", "Reformasi Birokrasi", "Akuntabilitas"],
-          desc: "Tulisan opini ini membahas pentingnya reformasi birokrasi, transparansi, dan akuntabilitas dalam meningkatkan kepercayaan publik."
-        }
-      ];
-
-      const newsGrid = document.getElementById("newsGrid");
-      const newsMoreBtn = document.getElementById("newsMoreBtn");
-      const newsFilterBtns = document.querySelectorAll(".news-filter-btn");
-
-      const newsModal = document.getElementById("newsModal");
-      const newsModalClose = document.getElementById("newsModalClose");
-      const newsModalImage = document.getElementById("newsModalImage");
-      const newsModalCategory = document.getElementById("newsModalCategory");
-      const newsModalTitle = document.getElementById("newsModalTitle");
-      const newsModalDate = document.getElementById("newsModalDate");
-      const newsModalDesc = document.getElementById("newsModalDesc");
-      const newsModalKeywords = document.getElementById("newsModalKeywords");
-
-      let activeNewsCategory = "all";
-      let showAllNews = false;
-
-      function getNewsLimit() {
-        if (window.innerWidth <= 520) return 3;
-        if (window.innerWidth <= 900) return 4;
-        return 6;
-      }
-
-      function formatNewsDate(dateString) {
-        return new Date(dateString).toLocaleDateString("id-ID", {
-          day: "numeric",
-          month: "long",
-          year: "numeric"
-        });
-      }
-
-      function getFilteredNews() {
-        return newsItems
-          .filter(function (item) {
-            return activeNewsCategory === "all" || item.category === activeNewsCategory;
-          })
-          .sort(function (a, b) {
-            return new Date(b.date) - new Date(a.date);
-          });
-      }
-
-      function openNewsModal(item) {
-        if (
-          !newsModal ||
-          !newsModalImage ||
-          !newsModalCategory ||
-          !newsModalTitle ||
-          !newsModalDate ||
-          !newsModalDesc ||
-          !newsModalKeywords
-        ) {
-          return;
-        }
-
-        newsModalImage.src = item.image;
-        newsModalImage.alt = item.title;
-        newsModalCategory.textContent = item.category;
-        newsModalTitle.textContent = item.title;
-        newsModalDate.textContent = formatNewsDate(item.date);
-        newsModalDesc.innerHTML = "";
-
-const descParagraphs = Array.isArray(item.desc)
-  ? item.desc
-  : String(item.desc || "").split(/\r?\n\s*\r?\n/);
-
-descParagraphs.forEach(function (paragraph) {
-  const p = document.createElement("p");
-  p.textContent = paragraph;
-  newsModalDesc.appendChild(p);
-});
-
-        newsModalKeywords.innerHTML = item.keywords
-          .map(function (keyword) {
-            return '<span class="news-keyword">' + keyword + '</span>';
-          })
-          .join("");
-
-        newsModal.classList.add("open");
-        newsModal.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeNewsModal() {
-        if (!newsModal) return;
-
-        newsModal.classList.remove("open");
-        newsModal.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-      }
-
-      function renderNews() {
-        if (!newsGrid) return;
-
-        const limit = getNewsLimit();
-        const filteredNews = getFilteredNews();
-        const visibleNews = showAllNews ? filteredNews : filteredNews.slice(0, limit);
-
-        newsGrid.innerHTML = "";
-
-        visibleNews.forEach(function (item) {
-          const article = document.createElement("article");
-          article.className = "news-card";
-          article.setAttribute("tabindex", "0");
-          article.setAttribute("role", "button");
-          article.setAttribute("aria-label", "Baca berita " + item.title);
-
-          article.innerHTML =
-            '<div class="news-image-wrap">' +
-              '<img src="' + item.image + '" alt="' + item.title + '" loading="lazy">' +
-            '</div>' +
-            '<div class="news-content">' +
-              '<div class="news-meta">' +
-                '<span class="news-category">' + item.category + '</span>' +
-                '<time class="news-date" datetime="' + item.date + '">' + formatNewsDate(item.date) + '</time>' +
-              '</div>' +
-              '<h3 class="news-title">' + item.title + '</h3>' +
-              '<p class="news-desc">' + item.desc + '</p>' +
-              '<div class="news-keywords">' +
-                item.keywords.map(function (keyword) {
-                  return '<span class="news-keyword">' + keyword + '</span>';
-                }).join("") +
-              '</div>' +
-            '</div>';
-
-          article.addEventListener("click", function () {
-            openNewsModal(item);
-          });
-
-          article.addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-              openNewsModal(item);
-            }
-          });
-
-          newsGrid.appendChild(article);
-        });
-
-        if (newsMoreBtn) {
-          if (filteredNews.length > limit) {
-            newsMoreBtn.style.display = "inline-block";
-            newsMoreBtn.textContent = showAllNews
-              ? "Tampilkan Lebih Sedikit"
-              : "Buka Semua Berita";
-          } else {
-            newsMoreBtn.style.display = "none";
-          }
-        }
-      }
-
-      newsFilterBtns.forEach(function (button) {
-        button.addEventListener("click", function () {
-          newsFilterBtns.forEach(function (btn) {
-            btn.classList.remove("active");
-          });
-
-          button.classList.add("active");
-          activeNewsCategory = button.dataset.category;
-          showAllNews = false;
-          renderNews();
-        });
-      });
-
-      if (newsMoreBtn) {
-        newsMoreBtn.addEventListener("click", function () {
-          showAllNews = !showAllNews;
-          renderNews();
-        });
-      }
-
-      if (newsModalClose) {
-        newsModalClose.addEventListener("click", closeNewsModal);
-      }
-
-      if (newsModal) {
-        newsModal.addEventListener("click", function (event) {
-          if (event.target.classList.contains("news-modal-overlay")) {
-            closeNewsModal();
-          }
-        });
-      }
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeNewsModal();
-        }
-      });
-
-      window.addEventListener("resize", renderNews);
-      renderNews();
-
-      /* NAVBAR ACTIVE + MOBILE DROPDOWN */
-      const sections = document.querySelectorAll("section[id]");
-      const navLinks = document.querySelectorAll(".nav-links a");
-      const mobileToggle = document.querySelector(".mobile-nav-toggle");
-      const navMenu = document.querySelector(".nav-links");
-
-      function activateNavbar() {
-        let currentSection = "";
-
-        sections.forEach(function (section) {
-          const sectionTop = section.offsetTop - 140;
-          const sectionHeight = section.offsetHeight;
-          const sectionId = section.getAttribute("id");
-
-          if (
-            window.scrollY >= sectionTop &&
-            window.scrollY < sectionTop + sectionHeight
-          ) {
-            currentSection = sectionId;
-          }
-        });
-
-        navLinks.forEach(function (link) {
-          link.classList.remove("active");
-
-          if (link.getAttribute("href") === "#" + currentSection) {
-            link.classList.add("active");
-          }
-        });
-      }
-
-      if (mobileToggle && navMenu) {
-        mobileToggle.addEventListener("click", function () {
-          navMenu.classList.toggle("open");
-          mobileToggle.classList.toggle("active");
-        });
-
-        navLinks.forEach(function (link) {
-          link.addEventListener("click", function () {
-            navMenu.classList.remove("open");
-            mobileToggle.classList.remove("active");
-          });
-        });
-
-        document.addEventListener("click", function (event) {
-          const clickInsideNav = navMenu.contains(event.target);
-          const clickToggle = mobileToggle.contains(event.target);
-
-          if (!clickInsideNav && !clickToggle) {
-            navMenu.classList.remove("open");
-            mobileToggle.classList.remove("active");
-          }
-        });
-      }
-
-      window.addEventListener("scroll", activateNavbar);
-      window.addEventListener("resize", activateNavbar);
-      activateNavbar();
+  function getFilteredNews() {
+    return globalNewsItems.filter(function (item) {
+      return activeNewsCategory === "all" || item.category === activeNewsCategory;
     });
-  })();
+  }
+
+  function openNewsModal(item) {
+    if (!newsModal) return;
+    document.getElementById("newsModalImage").src = item.image_url || '';
+    document.getElementById("newsModalCategory").textContent = item.category || '';
+    document.getElementById("newsModalTitle").textContent = item.title || '';
+    document.getElementById("newsModalDate").textContent = formatNewsDate(item.date_pub);
+    
+    const descContainer = document.getElementById("newsModalDesc");
+    descContainer.innerHTML = `<p>${escapeHtml(item.content_desc || '')}</p>`;
+
+    const keywordsContainer = document.getElementById("newsModalKeywords");
+    if (keywordsContainer && item.keywords) {
+      const keys = Array.isArray(item.keywords) ? item.keywords : [];
+      keywordsContainer.innerHTML = keys.map(k => `<span class="news-keyword">${escapeHtml(k)}</span>`).join('');
+    }
+
+    newsModal.classList.add("open");
+    newsModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeNewsModal() {
+    if (!newsModal) return;
+    newsModal.classList.remove("open");
+    newsModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function renderNews() {
+    if (!newsGrid) return;
+    const limit = getNewsLimit();
+    const filteredNews = getFilteredNews();
+    const visibleNews = showAllNews ? filteredNews : filteredNews.slice(0, limit);
+
+    newsGrid.innerHTML = "";
+
+    if (visibleNews.length === 0) {
+      newsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--muted);">Belum ada aktivitas untuk kategori ini.</p>';
+      if (newsMoreBtn) newsMoreBtn.style.display = "none";
+      return;
+    }
+
+    visibleNews.forEach(function (item) {
+      const article = document.createElement("article");
+      article.className = "news-card";
+      article.setAttribute("tabindex", "0");
+      article.setAttribute("role", "button");
+
+      article.innerHTML = `
+        <div class="news-image-wrap">
+          <img src="${item.image_url}" alt="${escapeHtml(item.title)}" loading="lazy">
+        </div>
+        <div class="news-content">
+          <div class="news-meta">
+            <span class="news-category">${escapeHtml(item.category)}</span>
+            <time class="news-date" datetime="${item.date_pub}">${formatNewsDate(item.date_pub)}</time>
+          </div>
+          <h3 class="news-title">${escapeHtml(item.title)}</h3>
+          <p class="news-desc">${escapeHtml(item.content_desc || '')}</p>
+        </div>
+      `;
+      article.addEventListener("click", () => openNewsModal(item));
+      newsGrid.appendChild(article);
+    });
+
+    if (newsMoreBtn) {
+      if (filteredNews.length > limit) {
+        newsMoreBtn.style.display = "inline-block";
+        newsMoreBtn.textContent = showAllNews ? "Tampilkan Lebih Sedikit" : "Buka Semua Berita";
+      } else {
+        newsMoreBtn.style.display = "none";
+      }
+    }
+  }
+
+  runAfterPageLoaded(function () {
+    // Memulai Penarikan Data
+    loadPublicDataFromDatabase();
+
+    document.querySelectorAll(".news-filter-btn").forEach(button => {
+      button.addEventListener("click", function () {
+        document.querySelectorAll(".news-filter-btn").forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        activeNewsCategory = this.dataset.category;
+        showAllNews = false;
+        renderNews();
+      });
+    });
+
+    if (newsMoreBtn) {
+      newsMoreBtn.addEventListener("click", function () {
+        showAllNews = !showAllNews;
+        renderNews();
+      });
+    }
+
+    if (newsModalClose) newsModalClose.addEventListener("click", closeNewsModal);
+    if (newsModal) {
+      newsModal.addEventListener("click", function (e) {
+        if (e.target.classList.contains("news-modal-overlay")) closeNewsModal();
+      });
+    }
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeNewsModal();
+    });
+
+    window.addEventListener("resize", renderNews);
+
+    const fadeElements = document.querySelectorAll(".fade-in");
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      fadeElements.forEach(el => observer.observe(el));
+    } else {
+      fadeElements.forEach(el => el.classList.add("visible"));
+    }
+
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".nav-links a");
+    const mobileToggle = document.querySelector(".mobile-nav-toggle");
+    const navMenu = document.querySelector(".nav-links");
+
+    function activateNavbar() {
+      let currentSection = "";
+      sections.forEach(function (sec) {
+        const sectionTop = sec.offsetTop - 140;
+        if (window.scrollY >= sectionTop) {
+          currentSection = sec.getAttribute("id");
+        }
+      });
+      navLinks.forEach(function (link) {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === "#" + currentSection) {
+          link.classList.add("active");
+        }
+      });
+    }
+
+    if (mobileToggle && navMenu) {
+      mobileToggle.addEventListener("click", function () {
+        navMenu.classList.toggle("open");
+        mobileToggle.classList.toggle("active");
+      });
+      navLinks.forEach(link => {
+        link.addEventListener("click", () => {
+          navMenu.classList.remove("open");
+          mobileToggle.classList.remove("active");
+        });
+      });
+    }
+
+    window.addEventListener("scroll", activateNavbar);
+    activateNavbar();
+  });
+})();
