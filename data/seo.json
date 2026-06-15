@@ -1,0 +1,16 @@
+{
+  "page_key": "home",
+  "meta_title": "Dr. Aminullah — Akademisi & Peneliti",
+  "meta_description": "Profil akademik Dr. Aminullah, S.Sos, M.AP, mencakup biografi, riwayat pendidikan, area penelitian, publikasi ilmiah, penghargaan, aktivitas akademik, dan kontak.",
+  "canonical_url": "https://domain-anda.com/",
+  "og_title": "Dr. Aminullah — Akademisi & Peneliti",
+  "og_description": "Profil akademik, publikasi ilmiah, penelitian, penghargaan, dan aktivitas akademik Dr. Aminullah, S.Sos, M.AP.",
+  "og_image_url": "assets/images/dr-aminullah-profile.jpg",
+  "schema_json": {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Dr. Aminullah, S.Sos, M.AP",
+    "jobTitle": "Akademisi dan Peneliti",
+    "url": "https://domain-anda.com/"
+  }
+}

@@ -1,0 +1,83 @@
+[
+  {
+    "section_key": "home",
+    "section_name": "Dr. Aminullah, S.Sos, M.AP",
+    "section_class": "hero",
+    "section_type": "static_html",
+    "sort_order": 1,
+    "is_active": true,
+    "partial_file": "sections/01-home.html"
+  },
+  {
+    "section_key": "biography",
+    "section_name": "Biografi",
+    "section_class": "bio-section",
+    "section_type": "static_html",
+    "sort_order": 2,
+    "is_active": true,
+    "partial_file": "sections/02-biography.html"
+  },
+  {
+    "section_key": "education",
+    "section_name": "Riwayat Pendidikan",
+    "section_class": "edu-section",
+    "section_type": "static_html",
+    "sort_order": 3,
+    "is_active": true,
+    "partial_file": "sections/03-education.html"
+  },
+  {
+    "section_key": "research",
+    "section_name": "Area Penelitian",
+    "section_class": "research-section",
+    "section_type": "static_html",
+    "sort_order": 4,
+    "is_active": true,
+    "partial_file": "sections/04-research.html"
+  },
+  {
+    "section_key": "publications",
+    "section_name": "Publikasi Ilmiah",
+    "section_class": "pub-section",
+    "section_type": "static_html",
+    "sort_order": 5,
+    "is_active": true,
+    "partial_file": "sections/05-publications.html"
+  },
+  {
+    "section_key": "awards",
+    "section_name": "Prestasi & Penghargaan",
+    "section_class": "awards-section",
+    "section_type": "static_html",
+    "sort_order": 6,
+    "is_active": true,
+    "partial_file": "sections/06-awards.html"
+  },
+  {
+    "section_key": "teaching",
+    "section_name": "Mata Kuliah Yang Diampu",
+    "section_class": "teaching-section",
+    "section_type": "static_html",
+    "sort_order": 7,
+    "is_active": true,
+    "partial_file": "sections/07-teaching.html"
+  },
+  {
+    "section_key": "gallery",
+    "section_name": "Berita & Aktivitas Akademik",
+    "section_class": "gallery-section",
+    "section_type": "static_html",
+    "sort_order": 8,
+    "is_active": true,
+    "partial_file": "sections/08-gallery.html"
+  },
+  {
+    "section_key": "contact",
+    "section_name": "Kontak",
+    "section_class": "contact-section",
+    "section_type": "static_html",
+    "sort_order": 9,
+    "is_active": true,
+    "partial_file": "sections/09-contact.html"
+  }
+]

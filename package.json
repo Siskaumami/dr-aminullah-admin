@@ -1,0 +1,10 @@
+{
+  "name": "dr-aminullah-website-refactored",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Refactored static landing page with CMS/admin and Supabase-ready structure.",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  }
+}
