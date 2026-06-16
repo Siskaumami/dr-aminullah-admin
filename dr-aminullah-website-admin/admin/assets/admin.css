@@ -95,3 +95,85 @@ section.card-grid.admin-view.active {
   .admin-sidebar { position: relative; height: auto; }
   .card-grid, .form-grid, .message-info { grid-template-columns: 1fr; }
 }
+
+/* --- RESPONSIVE MOBILE & TAB UNTUK ADMIN CMS --- */
+.admin-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  display: none;
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 992px) {
+  .admin-shell {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Sembunyikan Sidebar & Jadikan Melayang */
+  .admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 999;
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+  }
+  
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .admin-overlay.show {
+    display: block;
+  }
+
+  .admin-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1.5rem 1rem;
+  }
+
+  /* Munculkan Tombol Hamburger */
+  #admin-menu-toggle {
+    display: flex !important;
+  }
+
+  /* Rapikan Form Jadi 1 Kolom */
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  
+  /* Rapikan Card Dashboard Jadi 1 Kolom */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Rapikan Tabel agar tombol Aksi (Edit/Hapus) rapi ke bawah */
+  .table-wrap {
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .action-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .action-cell .btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+}

@@ -1317,39 +1317,17 @@ footer {
 
 /* --- MODIFIKASI: TAMPILAN TAB/TABLET --- */
 @media (max-width: 992px) {
-  /* Area Penelitian menjadi 2 Kolom pada Tablet */
-  .research-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  /* Reset perilaku bentangan desktop 3 kolom */
-  .research-card:last-child:nth-child(3n - 2),
-  .research-card:last-child:nth-child(3n - 1) {
-    grid-column: auto;
-  }
-  
-  /* Aktifkan perilaku ganjil membentang 2 kolom untuk Tab */
-  .research-card:last-child:nth-child(odd) {
-    grid-column: span 2;
-  }
-}
-
-/* --- TAMPILAN MOBILE --- */
-@media (max-width: 768px) {
-  nav {
-    height: 60px;
-    padding: 0 1.2rem;
-  }
-
+  /* --- FIX NAVBAR TAB --- */
+  /* Memunculkan menu hamburger lebih awal di ukuran Tablet */
   .mobile-nav-toggle {
     display: flex;
   }
-
+  
   .nav-links {
     position: absolute;
     top: 68px;
-    right: 1.2rem;
-    width: min(260px, calc(100vw - 2.4rem));
+    right: 2.5rem;
+    width: min(280px, calc(100vw - 5rem));
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -1364,30 +1342,30 @@ footer {
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
   }
-
+  
   .nav-links.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
     pointer-events: auto;
   }
-
+  
   .nav-links li {
     width: 100%;
   }
-
+  
   .nav-links a {
     display: block;
     padding: 0.85rem 1rem;
     border-radius: 12px;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
     letter-spacing: 0.12em;
   }
-
+  
   .nav-links a::after {
     display: none;
   }
-
+  
   .nav-links a:hover,
   .nav-links a.active {
     background: var(--accent-soft);
@@ -1395,18 +1373,66 @@ footer {
     font-weight: 700;
   }
 
+  /* --- LAYOUT KONTEN TAB --- */
+  .container {
+    padding: 0 2.5rem;
+  }
+  
   .hero {
     grid-template-columns: 1fr;
-    padding: 4rem 1.5rem 3rem;
+    text-align: left;
+    gap: 3rem;
+    padding: 6rem 2.5rem 3rem;
+  }
+  .hero-text {
+    padding-top: 20px;
+  }
+  .hero-eyebrow, .hero-stats, .hero-cta {
+    justify-content: flex-start;
+  }
+  .hero-eyebrow::before {
+    display: block;
+  }
+
+  .bio-grid, .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+  
+  .research-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .research-card:last-child:nth-child(3n - 2),
+  .research-card:last-child:nth-child(3n - 1) {
+    grid-column: auto;
+  }
+  .research-card:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+}
+
+/* --- TAMPILAN MOBILE --- */
+@media (max-width: 768px) {
+  nav {
+    height: 60px;
+    padding: 0 1.2rem;
+  }
+  .nav-links {
+    right: 1.2rem;
+    width: min(260px, calc(100vw - 2.4rem));
   }
 
   .container {
     padding: 0 1.5rem;
   }
-
-  .hero-image {
-    display: flex;
-    margin-top: 2rem;
+  
+  .hero {
+    padding: 6rem 1.5rem 3rem;
+  }
+  
+  .hero-stats {
+    flex-wrap: wrap;
+    gap: 1.5rem;
   }
 
   .photo-frame {
@@ -1416,7 +1442,6 @@ footer {
     margin: 0 auto;
   }
 
-  /* Ubah semua menjadi 1 Kolom di Mobile */
   .bio-grid,
   .research-grid,
   .awards-grid,
@@ -1426,23 +1451,32 @@ footer {
     grid-template-columns: 1fr;
   }
 
-  /* Modifikasi: Kembalikan bentangan seluruh kartu ke 1 kolom agar pas di mobile */
   .research-card:last-child:nth-child(n),
   .award-card:last-child:nth-child(n),
   .course-item:last-child:nth-child(n) {
     grid-column: span 1;
   }
 
+  .pub-item {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .pub-year {
+    width: 100% !important;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
   .teaching-section {
     padding-top: 1.5rem;
     padding-bottom: 2rem;
   }
-
   .teaching-section .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
   }
-
   .teaching-section .section-header {
     margin-bottom: 1.5rem;
   }
@@ -1450,59 +1484,46 @@ footer {
   .courses-grid {
     gap: 1rem;
   }
-
   .course-item {
     min-height: auto;
     padding: 1.25rem;
     gap: 1rem;
     align-items: center;
   }
-
   .course-code {
     width: 76px;
     height: 36px;
     font-size: 0.68rem;
   }
-
   .course-name {
     font-size: 0.94rem;
   }
-
   .course-level {
     font-size: 0.78rem;
   }
 
-  .bio-grid,
   .contact-grid {
     gap: 2.5rem;
-  }
-
-  .contact-grid {
     align-items: start;
   }
-
   .contact-grid > .fade-in:first-child,
   .contact-grid > .fade-in:last-child,
   .contact-info,
   .contact-form-wrap {
     min-height: auto;
   }
-
   .contact-items {
     gap: 1rem;
   }
-
   .contact-item {
     min-height: auto;
     padding: 1.15rem 1.25rem;
     align-items: flex-start;
   }
-
   .contact-item-icon {
     width: 40px;
     height: 40px;
   }
-
   .contact-form {
     gap: 0.85rem;
   }
@@ -1514,37 +1535,52 @@ footer {
   .news-modal-content {
     width: min(680px, calc(100vw - 2rem));
   }
-
   .news-modal-top {
     grid-template-columns: 260px 1fr;
   }
-
   .news-modal-image-wrap {
     height: 220px;
   }
-
   .news-modal-head {
     padding: 1.4rem;
   }
-
   .news-modal-title {
     font-size: 1.2rem;
   }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding: 0 1rem;
+  }
+  .footer-links a {
+    font-size: 0.7rem;
+  }
+  .footer-meta {
+    line-height: 1.6;
+    padding: 0 1rem;
+  }
 }
 
+/* --- HP KECIL --- */
 @media (max-width: 520px) {
+  .hero-stats {
+    justify-content: flex-start;
+    gap: 1.2rem;
+  }
+  .stat {
+    text-align: left;
+    width: 45%;
+  }
   .news-modal {
     padding: 1rem;
   }
-
   .news-modal-top {
     grid-template-columns: 1fr;
   }
-
   .news-modal-image-wrap {
     height: 190px;
   }
-
   .news-modal-head,
   .news-modal-body {
     padding: 1.3rem;
